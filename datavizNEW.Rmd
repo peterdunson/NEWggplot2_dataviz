@@ -1,0 +1,1887 @@
+---
+title: "dataviz"
+author: "Peter"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+fish <- load("/Users/peterdunson/Downloads/fish.RData")
+```
+
+
+
+```{r}
+ggplot(mammals, aes(x = body, y = brain)) +
+  geom_point(alpha = .6) +
+  coord_fixed() +
+  scale_x_log10() + #creates log without annoying steps
+  scale_y_log10() +
+  stat_smooth(method = "lm", se = FALSE, size = 1)
+```
+
+```{r}
+str(mtcars)
+```
+
+```{r}
+ggplot(mtcars, aes(cyl, mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+#changing above, telling ggplot that cyl is categorical
+ggplot(mtcars, aes(factor(cyl), mpg)) +
+  geom_point()
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, color = disp)) +
+  geom_point()
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, size = disp)) +
+  geom_point()
+```
+
+```{r}
+iris
+```
+
+```{r}
+g <- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_jitter()
+g
+```
+
+
+
+```{r}
+g <- g +
+  labs(x = "Sepal Length (cm)", y = "Sepal Width (cm)") +
+  theme_classic()
+g
+```
+
+```{r}
+str(diamonds)
+```
+
+```{r}
+ggplot(diamonds, aes(carat, price)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+diamonds
+```
+
+```{r}
+ggplot(diamonds, aes(carat, price, color = clarity)) +
+  geom_point(alpha = 0.4) + #points translucent
+  geom_smooth() #se false gets rid of uncertainty range
+```
+
+```{r}
+plt_price_vs_carat <- ggplot(diamonds, aes(carat, price))
+```
+
+```{r}
+plt_price_vs_carat +
+  geom_point()
+```
+
+```{r}
+plt_price_carat_trans <- plt_price_vs_carat + geom_point(alpha = .2)
+plt_price_carat_trans
+```
+
+```{r}
+plt_price_carat_clar <- plt_price_vs_carat + geom_point(aes(color = clarity))
+plt_price_carat_clar
+```
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point()
+```
+
+```{r}
+fcyl = factor(mtcars$cyl)
+```
+
+
+```{r}
+ggplot(mtcars, aes(mpg, fcyl)) +
+  geom_point()
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, mpg)) +
+  geom_point()
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, fill = fcyl)) +
+  geom_point(shape = 21, size = 4, alpha = .6)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, fill = fcyl, color = fam)) +
+  geom_point(shape = 21, size = 4, alpha = .6)
+```
+
+```{r}
+plt_mpg_vs_wt <- ggplot(mtcars, aes(wt, mpg))
+```
+
+```{r}
+plt_mpg_vs_wt +
+  geom_point(size = fcyl)
+```
+
+```{r}
+plt_mpg_vs_wt +
+  geom_point(aes(alpha = fcyl))
+```
+
+```{r}
+plt_mpg_vs_wt +
+  geom_point(aes(shape = fcyl))
+```
+
+```{r}
+plt_mpg_vs_wt +
+  geom_text(aes(label = fcyl))
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+  geom_point(size = 10) +
+  theme_void()
+```
+
+```{r}
+my_blue <- "#4ABEFF"
+```
+
+ATTRIBUTES, theres no aes() before the color and alpha here, theyre different than aesthetics
+
+```{r}
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point(color = my_blue, alpha = .6) 
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, fill = fcyl)) +
+  geom_point(color = my_blue, size = 10, shape = 1)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, color = fcyl)) +
+  geom_point(alpha = .5)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, color = fcyl)) +
+  geom_text(label = rownames(mtcars), color = "red")
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, color = fcyl)) +
+  geom_point(shape = 24, color = "yellow")
+```
+
+```{r}
+ggplot(mtcars, aes(mpg, qsec, color = fcyl, shape = fam, size = hp/wt)) +
+  geom_point()
+```
+
+positions, identity is normal
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(position = "identity") #not necessary to write
+```
+
+
+Jitter - adds random noise
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(position = "jitter")
+```
+OR (still jitter)
+```{r}
+posn_j <- position_jitter(.1, seed = 136)
+#set arguments for position like width and seed
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(position = posn_j)
+```
+
+scale_*_*()
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(position = "jitter") +
+  scale_x_continuous("Sepal Length", limits = c(2, 8), breaks = seq(2, 8, 3), expand = c(0, 0), labels = c("Setosa", "Versicolor", "Virginica")) + #limits for range, breaks for ticmark position, expand small gap btwn data and axis, labels adjust category names
+  scale_color_discrete("Species")
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(position = "jitter") +
+  labs(x = "Sepal Length", y = "Sepal Width", color = "Species") #labs is quick way to change names
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar() +
+  labs(x = "Number of Cylinders", y = "Count")
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar() +
+  labs(x = "Number of Cylinders", y = "Count") +
+  scale_fill_manual("Transmission", values = palette())
+```
+
+```{r}
+palette <- c(automatic = "#377EB8", manual = "#E41A1C")
+
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = 'dodge') +
+  labs(x = "Number of Cylinders", y = "Count") +
+  scale_fill_manual("Transmission", values = palette)
+
+#manual and automatic arent set up right, so below is colorless
+```
+
+univariate
+```{r}
+ggplot(mtcars, aes(mpg, 0)) + #plot 0 so that it is univariate
+  geom_point(position = "jitter")
+```
+
+```{r}
+ggplot(mtcars, aes(mpg, 0)) + 
+  geom_point(position = "jitter") +
+  ylim(-2, 2) #y limit
+```
+
+
+form follows function
+
+GEOMETRIES:
+
+essential aesthetics: x,y 
+optional: alpha, color, fill, shape, size, stroke
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point()
+```
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise_all(mean) -> iris.summary
+
+iris.summary #summary statistics, means of all species parameters
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() + #inherits both data and aes from ggplot
+  geom_point(data = iris.summary, shape = 15, size = 5) #different data but inherited aes
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() + 
+  geom_point(data = iris.summary, shape = 21, size = 5, fill = "black", stroke = 2) 
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_jitter(alpha = .6)
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_jitter(shape = 1) #deals with overplotting
+```
+
+```{r}
+plt_price_carat_by_clar <- ggplot(diamonds, aes(carat, price, color = clarity))
+```
+
+```{r}
+plt_price_carat_by_clar +
+  geom_point(alpha = .5, shape = ".") # "." makes tiny points, alpha for transparency
+```
+
+```{r}
+plt_price_carat_by_clar +
+  geom_point(alpha = .5, shape = 16)
+```
+
+```{r}
+plt_mpg_fcyl_by_fam <- ggplot(mtcars, aes(fcyl, mpg, color = fam)) 
+```
+
+```{r}
+plt_mpg_fcyl_by_fam +
+  geom_point()
+```
+
+```{r}
+plt_mpg_fcyl_by_fam +
+  geom_point(position = position_jitter(width = .3)) #seems like overkill, pretty sure you can just geom_jitter(width = .3)
+```
+
+```{r}
+plt_mpg_fcyl_by_fam +
+  geom_point(position = position_jitterdodge(jitter.width = .3, dodge.width = .3)) #jitter and dodge, how tf is position_jitterdodge a real ggplot function???
+```
+
+
+low precision data
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_jitter(alpha = .5, width = .1)
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(alpha = .5, position = "Jitter")
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(alpha = .5, position = position_jitter(width = .1))
+```
+
+
+pretend i have the vocab dataset
+```{r}
+str(vocab)
+
+ggplot(Vocab, aes(vocabulary, education)) +
+  geom_point()
+```
+
+```{r}
+ggplot(Vocab, aes(vocabulary, education)) +
+  geom_jitter(alpha = .2, shape = 1)
+```
+
+```{r}
+ggplot(iris, aes(x = Sepal.Width, fill = Species)) + #continuous data because no gaps in bars
+  geom_histogram(binwidth = 0.1, center = .05, position = "stack") #center = to half binwidth, stack is default
+```
+
+```{r}
+ggplot(iris, aes(x = Sepal.Width, fill = Species)) + 
+  geom_histogram(binwidth = 0.1, center = .05, position = "dodge")
+```
+
+```{r}
+ggplot(iris, aes(x = Sepal.Width, fill = Species)) + 
+  geom_histogram(binwidth = 0.1, center = .05, position = "fill")
+```
+
+```{r}
+ggplot(mtcars, aes(mpg)) +
+  geom_histogram()
+```
+
+```{r}
+ggplot(mtcars, aes(mpg)) +
+  geom_histogram(binwidth = 1)
+```
+
+```{r}
+ggplot(mtcars, aes(mpg, ..density..)) + #shows frequency densities
+  geom_histogram(binwidth = 1, fill = datacamp_light_blue)
+```
+
+```{r}
+datacamp_light_blue <- "#51A8C9"
+```
+
+```{r}
+ggplot(mtcars, aes(mpg, fill = fam)) +
+  geom_histogram(binwidth = 1)
+```
+
+```{r}
+ggplot(mtcars, aes(mpg, fill = fam)) +
+  geom_histogram(binwidth = 1, position = "dodge")
+```
+
+```{r}
+ggplot(mtcars, aes(mpg, fill = fam)) +
+  geom_histogram(binwidth = 1, position = "fill")
+```
+
+```{r}
+ggplot(mtcars, aes(mpg, fill = fam)) +
+  geom_histogram(binwidth = 1, alpha = .4, position = "identity")
+```
+
+
+plotting distr
+```{r}
+iris_summ_long <- iris %>%
+  select(Species, Sepal.Width) %>%
+  pivot_longer(!Species, names_to = "key", values_to = "value") %>%
+  group_by(Species) %>%
+  summarise(avg = mean(value), stdev = sd(value))
+```
+
+```{r}
+ggplot(iris_summ_long, aes(Species, avg)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = avg - stdev, ymax = avg + stdev), width = .1)
+#people dont like these plots
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar()
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = "fill")
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = "dodge")
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = position_dodge(width = .2))
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = position_dodge(width = .2), alpha = .6)
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar() +
+  scale_fill_brewer(palette = "Set1") #filling according to an ordinal variable
+```
+
+LINE PLOTSSS, time series
+
+```{r}
+str(beaver1)
+```
+
+```{r}
+ggplot(beaver1, aes(time, temp)) +
+  geom_line()
+```
+
+```{r}
+ggplot(beaver1, aes(time, temp, color = factor(activ))) +
+  geom_line() #not supposed to be separate like below...
+```
+
+```{r}
+ggplot(fish.tidy, aes(Year, Capture, linetype = Species)) + #linetype aesthetic
+  geom_line()
+```
+
+```{r}
+ggplot(fish.tidy, aes(Year, Capture, color = Species)) + #color is best
+  geom_line()
+```
+
+
+fill aesthetic geom_area()
+```{r}
+ggplot(fish.tidy, aes(Year, Capture, fill = Species)) + 
+  geom_area()
+```
+
+```{r}
+ggplot(fish.tidy, aes(Year, Capture, fill = Species)) + 
+  geom_area(position = "fill")
+```
+
+```{r}
+ggplot(fish.tidy, aes(Year, Capture, fill = Species)) +
+  geom_ribbon(aes(ymax = Capture, ymin = 0), alpha = .3) #overlaps
+```
+
+```{r}
+head(economics)
+```
+
+```{r}
+ggplot(economics, aes(date, unemploy/pop)) +
+  geom_line()
+```
+
+```{r}
+head(fish.species)
+```
+
+
+```{r}
+ggplot(fish.species, aes(Year, Rainbow)) +
+  geom_line()
+```
+
+```{r}
+ggplot(fish.species, aes(Year, Pink)) +
+  geom_line()
+```
+
+```{r}
+ggplot(fish.tidy, aes(Year, Capture)) +
+  geom_line(aes(group = Species))
+```
+
+```{r}
+ggplot(fish.tidy, aes(Year, Capture, color = Species)) +
+  geom_line()
+```
+
+```{r}
+
+```
+
+
+```{r}
+ggplot(fish.tidy, aes(Year, Capture, fill = Species)) +
+  geom_area()
+```
+
+
+THEMES
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_jitter(alpha = .6) +
+  theme(axis.title = element_text(color = "blue")) #changes axis title color
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_jitter(alpha = .6) +
+  theme(line = element_blank(), rect = element_blank(), text = element_blank()) #or theme_void()
+```
+
+```{r}
+#stupid fuckers didnt define this for us????????????????????????????????????????????????????????????
+#check screenshots for what its supposed to look liek
+p +
+  theme(legend.position = "none") #doesnt have legend
+```
+
+```{r}
+p +
+  theme(legend.position = "bottom") #positioning legend at the bottom
+```
+
+```{r}
+p +
+  theme(legend.position = c(.6, .1)) #exact coords for where legend is
+```
+
+```{r}
+p +
+  theme(rect = element_rect(fill = "grey92"), legend.key = element_rect(color = NA)) #filling the rectangles with grey, removing legend keys outline, color = NA, pic of this in ss
+```
+
+```{r}
+p +
+  theme(rect = element_rect(fill = "grey92"), legend.key = element_rect(color = NA), axis.ticks = element_blank(), panel.grid = element_blank()) #removing axis ticks and panel gridlines
+```
+
+```{r}
+p +
+  theme(rect = element_rect(fill = "grey92"), legend.key = element_rect(color = NA), axis.ticks = element_blank(), panel.grid = element_blank(), panel.grid.major.y = element_line(color = "white", size = .5, linetype = "dotted")) #adding y axis major lines back, in white and dotted
+```
+
+```{r}
+p +
+  theme(rect = element_rect(fill = "grey92"), legend.key = element_rect(color = NA), axis.ticks = element_blank(), panel.grid = element_blank(), panel.grid.major.y = element_line(color = "white", size = .5, linetype = "dotted"), axis.text = element_text(color = "grey25"), plot.title = element_text(face = "italic", size = 16)) #axis text color to dark grey, plot title italic and different size
+```
+
+```{r}
+plt_mpg_vs_wt_by_cyl <- ggplot(mtcars, aes(wt, mpg, color = fcyl)) + 
+  geom_point()
+```
+
+```{r}
+plt_mpg_vs_wt_by_cyl +
+  theme(axis.ticks.length = unit(2, "lines")) #giving axis tick length a unit of 2 "lines"
+```
+
+```{r}
+plt_mpg_vs_wt_by_cyl + 
+  theme(legend.key.size = unit(3, "cm"))
+```
+
+```{r}
+plt_mpg_vs_wt_by_cyl +
+  theme(legend.margin = margin(20, 30, 40, 50, "pt")) #setting legend margin, margin(top, right, bottom, left, unit)
+```
+
+```{r}
+plt_mpg_vs_wt_by_cyl +
+  theme(plot.margin = margin(10, 30, 50, 70, "mm")) #whitespace widening
+```
+
+```{r}
+z <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_jitter(alpha = .6) +
+  scale_x_continuous("Sepal Length (cm)", limits = c(4,8), expand = c(0,0)) +
+  scale_y_continuous("Sepal Width (cm)", limits = c(1.5,5), expand = c(0,0)) +
+  scale_color_brewer("Species", palette = "Dark2", labels = c("Setosa", "Versicolor", "Virginica"))
+
+z
+```
+
+```{r}
+z +
+  theme(text = element_text(family = "serif", size = 14), rect = element_blank(), panel.grid = element_blank(), title = element_text(color = "#8b0000"), axis.line = element_line(color = "black")) #changed font family, size, and title color
+```
+
+```{r}
+theme_iris <- theme(text = element_text(family = "serif", size = 14), rect = element_blank(), panel.grid = element_blank(), title = element_text(color = "#8b0000"), axis.line = element_line(color = "black"))
+```
+
+```{r}
+z + theme_iris
+```
+
+```{r}
+plt_mpg_vs_wt_by_cyl + theme_iris +
+  #theme(axis.line.x = element_blank()) can just add theme layers if you want more
+```
+
+
+built in themes
+```{r}
+z +
+  theme_classic() +
+  theme(text = element_text(family = "serif")) #can modify if desired
+```
+
+```{r}
+z +
+  theme_tufte() #mimics tufte 
+```
+
+```{r}
+original <- theme_update(text = element_text(family = "serif", size = 14), rect = element_blank(), panel.grid = element_blank(), title = element_text(color = "#8b0000"), axis.line = element_line(color = "black")) #updates the default theme, all themes will be this now
+```
+
+```{r}
+theme_set(original) #set complete theme object
+```
+
+```{r}
+z +
+  theme_bw()
+```
+
+```{r}
+z +
+  theme_classic()
+```
+
+```{r}
+z +
+  theme_void()
+```
+
+```{r}
+z +
+  theme_fivethirtyeight()
+```
+
+```{r}
+z +
+  theme_tufte()
+```
+
+```{r}
+z +
+  theme_wsj()
+```
+
+```{r}
+theme_recession <- theme(rect = element_rect(fill = "grey92"), legend.key = element_rect(color = NA), axis.ticks = element_blank(), panel.grid = element_blank(), panel.grid.major.y = element_line(color = "white", linewidth = .5, linetype = "dotted"), axis.text = element_text(color = "grey25"), plot.title = element_text(face = "italic", size = 16), legend.position = c(.6, .1))
+```
+
+```{r}
+theme_tufte_recession <- theme_tufte() + theme_recession
+```
+
+```{r}
+z +
+  theme_tufte_recession
+```
+
+```{r}
+set.theme(theme_tufte_recession) #not going to do this...
+```
+
+```{r}
+z
+```
+
+```{r}
+z +
+  theme_tufte() +
+  theme(legend.position = "none", axis.ticks = element_blank(), axis.title = element_text(color = "grey60"), axis.text = element_text(color = "grey60"), panel.grid.major.y = element_line(color = "grey60", linewidth = .25, linetype = "dotted")) 
+```
+
+
+NEW STUFF
+```{r}
+dplyr::glimpse(gm2007_full) #if i had it
+```
+
+```{r}
+#pretend i have this, find in screenshots
+
+ggplot(gm2007, aes(lifeExp, country, color = lifeExp)) +
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30, yend = country), size = 2)
+```
+
+```{r}
+ggplot(gm2007, aes(lifeExp, country, color = lifeExp)) +
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30, yend = country), size = 2) +
+  geom_text(aes(label = lifeExp), color = "white", size = 1.5)
+```
+
+```{r}
+ggplot(gm2007, aes(lifeExp, country, color = lifeExp)) +
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30, yend = country), size = 2) +
+  geom_text(aes(label = lifeExp), color = "white", size = 1.5) +
+  scale_x_continuous("", expand = c(0,0), limits = c(30, 90), position = "top") + #expanding x scales and limits, placing axis on top of plot
+  scale_color_gradientn(colors = palette) +
+  labs(title = "ruignfngisjdf", caption = "rjnigfner") #adding labels
+```
+
+#skipped the last bit 
+
+
+PT2
+
+stats
+```{r}
+p <- ggplot(iris, aes(x = Sepal.Width))
+```
+
+```{r}
+p +
+  geom_histogram()
+```
+
+```{r}
+p + 
+  stat_bin() #same as geom_histogram(), and geom_freqpoly()
+```
+
+```{r}
+t <- ggplot(mtcars, aes(factor(cyl), fill = factor(am)))
+```
+
+```{r}
+t + geom_bar()
+```
+
+```{r}
+t +
+  stat_count() #same as geom_bar()
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() +
+  geom_smooth(se = FALSE, span = .4) #span controls size of sliding window, smaller spans are more noisy
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) #lm, glm, rlm, gam
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() +
+  stat_smooth(method = "lm", fullrange = TRUE) #fullrange is for predictions, geom_smooth and stat_smooth are comprable
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+fcylcars <- mtcars %>%
+  mutate(fcyl = factor(cyl))
+```
+
+```{r}
+fcylcars
+```
+
+
+```{r}
+ggplot(fcylcars, aes(wt, mpg, color = fcyl)) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE) +
+  stat_smooth(aes(group = 1), method = "lm", se = FALSE)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  stat_smooth(se = FALSE, color = "red", span = .9) +
+  stat_smooth(se = FALSE, color = "green", span = .6) +
+  stat_smooth(se = FALSE, color = "blue", span = .3)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, color = fcyl)) +
+  geom_point() +
+  stat_smooth(se = FALSE) +
+  stat_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg, color = fcyl)) +
+  geom_point() +
+  stat_smooth(aes(color = "All"), se = FALSE) +
+  stat_smooth(method = "lm", se = FALSE) #LOESS over the entire thing, locally weighted scatterplot smoothing
+```
+
+```{r}
+ggplot(diamonds, aes(carat, price, color = cut)) +
+  geom_jitter(alpha = .25) +
+  stat_smooth(aes(fill = cut), method = "lm", size = .5)
+```
+
+```{r}
+diamonds
+```
+
+```{r}
+g <- ggplot(iris, aes(Sepal.Length, Sepal.Width))
+
+g +
+  geom_point()
+```
+
+```{r}
+g +
+  geom_jitter(alpha = .5, width = .1, height = .1)
+```
+
+```{r}
+g +
+  geom_count() #counts number of observations at each location and assigns count to size, alternative to jitter
+```
+
+```{r}
+g +
+  stat_sum() #same as above
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_count(alpha = .4) #over plotting occurs if its got another variable by color
+```
+
+```{r}
+data("Journals") #from AER
+```
+
+```{r}
+Journals
+```
+
+```{r}
+j <- ggplot(Journals, aes(log(price/citations), log(subs))) +
+  geom_point(alpha = .5) +
+  labs()
+
+j
+```
+
+```{r}
+j +
+  geom_quantile(quantiles = c(.05, .5, .95)) #modeling 5th and 95th percentile and median
+```
+
+```{r}
+j +
+  stat_quantile(quantiles = c(.05, .5, .95)) #same as above
+```
+
+```{r}
+data("Vocab")
+```
+
+```{r}
+Vocab #FINALLYYYYY FIGURED IT OUTTTTTT
+```
+
+```{r}
+ggplot(Vocab, aes(education, vocabulary, color = year)) + #should be year_group and have just 2 separate groups... ss on ipad
+  geom_jitter(alpha = .25) +
+  stat_quantile(quantiles = c(.05, .5, .95))
+```
+
+```{r}
+ggplot(Vocab, aes(education, vocabulary)) +
+  stat_sum() +
+  scale_size(range = c(1, 10))
+```
+
+```{r}
+ggplot(Vocab, aes(education, vocabulary)) +
+  stat_sum(aes(size = ..prop..)) #warning says to use something different
+```
+
+```{r}
+ggplot(Vocab, aes(education, vocabulary, group = education)) + #grouping by education, circle size represents proportion of the group, think in columns up and down percent of the whole
+  stat_sum(aes(size = ..prop..))
+```
+
+```{r}
+ggplot(iris, aes(Species, Sepal.Length)) +
+  geom_jitter(width = .2)
+```
+calculating statistics
+```{r}
+install.packages("Hmisc")
+```
+
+```{r}
+set.seed(123)
+xx <- rnorm(100)
+
+smean.sdl(xx, mult = 1) #mult = 1 means 1 standard deviation
+```
+
+```{r}
+mean_sdl(xx, mult = 1) #converts vector to a dataframe
+```
+
+```{r}
+ggplot(iris, aes(Species, Sepal.Length)) +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1)) #uses geom_pointrange() by default
+```
+
+```{r}
+ggplot(iris, aes(Species, Sepal.Length)) +
+  stat_summary(fun = mean, geom = "point") + #point where mean is
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = .1) #for error bars, explaining where they go
+```
+
+
+95% confidence interval
+```{r}
+ERR <- qt(.975, length(xx) - 1) * (sd(xx) / sqrt(length(xx)))
+mean(xx)
+```
+
+```{r}
+mean(xx) + (ERR * c(-1,1)) #95% CI
+```
+
+```{r}
+mean_cl_normal(xx)
+```
+
+
+stat_function and qq
+```{r}
+iris #supposed to use mammals but dont have
+```
+
+```{r}
+mams.new <- data.frame(body = log10(mammals$body)) 
+
+ggplot(mams.new, aes(body)) +
+  geom_histogram(aes(..density..)) +
+  geom_rug() +
+  stat_function(fun = dnorm, color = "red", args = list(mean = mean(mams.new$body), sd = sd(mams.new$body)))
+
+#I DONT HAVE FUCKING MAMMALS, ss on ipad june 29th normal distr
+```
+
+```{r}
+ggplot(mams.new, aes(sample = body)) +
+  stat_qq() + #allow us to compare data to a distr
+  geom_qq_line(col = "red")
+```
+
+```{r}
+posn_j <- position_jitter(width = .2)
+
+posn_d <- position_dodge(width = .1)
+
+posn_jd <- position_jitterdodge(jitter.width = .2, dodge.width = .1)
+```
+
+```{r}
+fcyl = factor(mtcars$cyl)
+
+fam = factor(mtcars$am)
+```
+
+
+```{r}
+p_wt_vs_fcyl_by_fam <- ggplot(mtcars, aes(fcyl, wt, color = fam))
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam +
+  geom_point()
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam +
+  geom_point(position = posn_j) #applying to the base plot
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam +
+  geom_point(position = posn_d)
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam +
+  geom_point(position = posn_jd)
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam_jit <- ggplot(mtcars, aes(fcyl, wt, color = fam)) +
+  geom_point(position = posn_j)
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam_jit +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), position = posn_d) #setting data func to mean_sdl, drawing 1 sd each side of mean by assigning to fun.args in form of a list, setting position with posn_d
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam_jit +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), position = posn_d, geom= "errorbar")
+```
+
+```{r}
+p_wt_vs_fcyl_by_fam_jit +
+  stat_summary(fun.data = mean_cl_normal, position = posn_d) #adding summary stat of 95% confidence limits
+```
+
+
+the coord layer
+```{r}
+iris.smooth <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point(alpha = .7) +
+  geom_smooth()
+iris.smooth
+```
+
+```{r}
+iris.smooth +
+  scale_x_continuous(limits = c(4.5, 5.5)) #zooming in
+```
+
+```{r}
+iris.smooth +
+  xlim(c(4.5, 5.5)) #quick and dirty alternative
+```
+
+```{r}
+iris.smooth +
+  coord_cartesian(xlim = c(4.5, 5.5)) #doesnt filter the dataset, change xlim with CAUTION
+```
+
+
+aspect ratio, good for deceiving, PACKAGE IS ZOO
+```{r}
+sunspots.m <- data.frame(year = index(sunspot.month), value = reshape2::melt(sunspot.month)$value)
+```
+
+```{r}
+install.packages("reshape2")
+```
+
+```{r}
+ggplot(sunspots.m, aes(year, value)) +
+  geom_line() +
+  coord_fixed() #default 1:1 aspect ratio
+```
+
+```{r}
+ggplot(sunspots.m, aes(year, value)) +
+  geom_line() +
+  coord_fixed(.055) #reducing aspect ratio to very low value, flatten plot
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp, color = fam)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(limits = c(3, 6))
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp, color = fam)) +
+  geom_point() +
+  geom_smooth() +
+  coord_cartesian(xlim = c(3, 6))
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_jitter() +
+  geom_smooth(method = "lm", se = FALSE) +
+  coord_fixed()
+```
+
+```{r}
+sun_plot <- ggplot(sunspots.m, aes(year, value)) +
+  geom_line()
+```
+
+```{r}
+sun_plot +
+  coord_fixed(ratio = 20)  #changing aspect ratio to 20:1, doesnt make sense here but will help in future
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point(size = 2) +
+  coord_cartesian(expand = 0) +
+  theme_classic()
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point(size = 2) +
+  coord_cartesian(expand = 0, clip = "off") + #clip off prevents points at edge of plot being cut off
+  theme_classic() +
+  theme(axis.line = element_blank())
+```
+
+
+coords vs scales
+```{r}
+ggplot(msleep, aes(bodywt, y = 1)) +
+  geom_jitter() +
+  scale_x_continuous(limits = c(0,7000), breaks = seq(0, 7000, 1000))
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), 1)) +
+  geom_jitter() +
+  scale_x_continuous(limits = c(-3,4), breaks = -3:4) #breaks are where the tickmarks are placed
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), 1)) +
+  geom_jitter() +
+  scale_x_continuous(limits = c(-3,4), breaks = -3:4) +
+  annotation_logticks(sides = "b") #annotation log tickmarks, highlights the log transformation
+```
+
+```{r}
+ggplot(msleep, aes(bodywt, 1)) +
+  geom_jitter() +
+  scale_x_log10(limits = c(1e-03, 1e+04)) #transforms data and calculates statistics needed, labels correspond to actual values in dataset
+```
+
+```{r}
+ggplot(msleep, aes(bodywt, 1)) +
+  geom_jitter() +
+  coord_trans(x = "log10") #applies any transformation we need, labels different
+```
+
+```{r}
+ggplot(msleep, aes(bodywt, brainwt)) +
+  geom_point() +
+  ggtitle("Raw Values") +
+  scale_x_log10() +
+  scale_y_log10() +
+  ggtitle("Scale_ functions")
+```
+
+```{r}
+ggplot(msleep, aes(bodywt, brainwt)) +
+  geom_point() +
+  coord_trans(x = "log10", y = "log10")
+```
+
+```{r}
+ggplot(msleep, aes(bodywt, brainwt)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_x_log10() +
+  scale_y_log10() +
+  ggtitle("Scale Functions")
+```
+
+```{r}
+ggplot(msleep, aes(bodywt, brainwt)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  coord_trans(x = "log10", y = "log10") #be careful with this function!! transformation makes it look wack
+```
+
+
+axis modifications
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  coord_flip() #WOW, changes x and y axis, only one coord function per plot so cant set aspect ratio now
+```
+
+```{r}
+airquality
+```
+
+```{r}
+airqual <-airquality %>%
+  mutate(date = as.Date(paste0(Month, "-", Day), format = "%m-%d"))
+```
+
+
+```{r}
+ggplot(airqual, aes(date, Temp)) +
+  geom_line() +
+  labs(x = "Date (1973)", y = "Fahrenheit")
+```
+
+```{r}
+y_breaks <- c(59, 68, 86, 95, 104)
+
+y_labels <- (y_breaks - 32) * 5/9
+```
+
+```{r}
+secondary_y_axis <- sec_axis(trans = identity, name = "Celcius", breaks = y_breaks, labels = y_labels) #defining the second axis, define transformation, name, ticks, and labels
+```
+
+```{r}
+secondary_y_axis
+```
+
+```{r}
+#adding in the secondary y axis
+ggplot(airqual, aes(date, Temp)) +
+  geom_line() +
+  scale_y_continuous(sec.axis = secondary_y_axis) + #adding axis
+  labs(x = "Date (1973)", y = "Fahrenheit")
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = "dodge")
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = "dodge") +
+  coord_flip()
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = position_dodge(width = .5)) + #overlapping
+  coord_flip()
+```
+
+```{r}
+mtcars
+```
+
+
+```{r}
+ggplot(mtcars, aes(hp, wt)) +
+  geom_point() +
+  labs(x = "cars", y = "weight")
+```
+
+```{r}
+ggplot(mtcars, aes(hp, wt)) +
+  geom_point() +
+  labs(x = "horses", y = "weight") +
+  coord_flip() +
+  geom_smooth(method = "lm")
+```
+
+polar coordinates, cartesian(2d), maps/plotting projections, use polar coords with caution
+```{r}
+ggplot(mtcars, aes(x = 1, fill = fcyl)) +
+  geom_bar() +
+  coord_polar(theta = "y") #makes it so theyre divided differently
+```
+
+```{r}
+ggplot(mtcars, aes(x = 1, fill = fcyl)) +
+  geom_bar(width = .1) +
+  coord_polar(theta = "y") + 
+  scale_x_continuous(limits = c(.5, 1.5))
+```
+
+```{r}
+install.packages("openair")
+```
+
+```{r}
+mydata
+```
+
+```{r}
+mydata <- mydata %>%
+  mutate(ws_range = cut(ws, breaks = c(0, 2, 4, 6, 8, 10, 12, 14), 
+                        labels = c("0-2", "2-4", "4-6", "6-8", "8-10", "10-12", "12-14")) %>%
+                        factor(levels = c("12-14", "10-12", "8-10", "6-8", "4-6", "2-4", "0-2")))
+```
+
+
+```{r}
+ggplot(mydata, aes(wd, fill = ws_range)) +
+  geom_bar() +
+  coord_polar(start = -pi/16) #positions north at the top of the plot IM SUPPOSED TO HAVE DIRECTIONS NOT NUMBERS... ss on ipad jun 30
+```
+
+FACETSSSS, just splitting up dataset
+```{r}
+facet_grid(cols = vars(xx))
+```
+
+```{r}
+facet_grid(. ~ x) #everything on right split into rows, left splits into columns
+```
+
+```{r}
+facet_grid(rows = vars(xx))
+```
+
+```{r}
+mtcars
+```
+
+
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(rows = vars(am))
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(cols = vars(cyl))
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(rows = vars(am), cols = vars(cyl))
+```
+
+```{r}
+#combine factor(cyl) and factor(am) into a single interaction variable, fcyl_fam
+cars <- mtcars %>%
+  mutate(fcyl_fam = interaction(factor(cyl), factor(am)))
+```
+
+```{r}
+ggplot(cars, aes(wt, hp, color = fcyl_fam)) +
+  geom_point() +
+  scale_color_brewer(palette = "Paired") #WOW CHAT GPT
+```
+
+```{r}
+ggplot(cars, aes(wt, hp, color = fcyl_fam, size = disp)) +
+  geom_point() +
+  scale_color_brewer(palette = "Paired")
+```
+
+```{r}
+cars
+```
+
+
+```{r}
+ggplot(cars, aes(wt, hp, color = fcyl_fam, size = disp)) +
+  geom_point() +
+  scale_color_brewer(palette = "Paired") +
+  facet_grid(rows = vars(gear), cols = vars(vs))
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(am ~ .) #formula notation for faceting
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(. ~ cyl)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(am ~ cyl)
+```
+
+labeling and arranging facets
+
+```{r}
+msleep
+```
+
+
+```{r}
+#supposed to be modified msleep but we shall see...
+
+p <- ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  coord_fixed()
+
+p
+```
+
+```{r}
+p +
+  facet_grid(rows = vars(vore)) #cols is better tho???
+```
+
+```{r}
+p +
+  facet_grid(rows = vars(vore), labeller = label_both) #labels the row with vore and type of vore
+```
+
+```{r}
+p +
+  facet_grid(rows = vars(vore, conservation), labeller = label_context) #adds variable name only if labels are ambiguous 
+```
+
+```{r}
+p +
+  facet_grid(rows = vars(vore), cols = vars(conservation), labeller = label_context) #label_context is not needed here because it defaults
+```
+
+```{r}
+#FORCATS PACKAGE, for renaming inside dataset
+
+msleep$converation <- fct_recode(msleep$conservation, Domesticated = "domesticated", LeastConcern = "lc", NearThreatened = "nt", Vulnerable = "vu", Endangered = "en")
+
+msleep$vore <- fct_recode(msleep$vore, Carnivore = "carni", Herbivore = "herbi", Insectivore = "insecti", Omnivore = "omni")
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  coord_fixed() +
+  facet_grid(rows = vars(vore), cols = vars(conservation))
+
+#not working for the conservation for some reason
+```
+
+```{r}
+msleep
+```
+
+
+```{r}
+#change order of levels
+msleep$conservation = fct_relevel(msleep$vore, c("Carnivore", "Omnivore", "Herbivore", "Insectivore"))
+```
+
+
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(cols = vars(cyl))
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(cols = vars(cyl), labeller = label_both)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(cols = vars(cyl), labeller = label_context)
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(cols = vars(vs, cyl), labeller = label_context)
+```
+
+```{r}
+mtcar <- mtcars %>%
+  mutate(fam = factor(am), fcyl = factor(cyl))
+```
+
+```{r}
+mtcar
+```
+
+```{r}
+mtcar$fam <- factor(mtcar$am, labels = c(`0` = "automatic", `1` = "manual")) #renaming 0 and 1 to true names
+```
+
+```{r}
+ggplot(mtcar, aes(wt, hp)) + 
+  geom_point() +
+  facet_grid(cols = vars(fam))
+```
+
+```{r}
+mtcar$fam <- factor(mtcar$am, levels = c(1, 0), labels = c("manual", "automatic")) #switching order 
+```
+
+```{r}
+ggplot(mtcar, aes(wt, hp)) + 
+  geom_point() +
+  facet_grid(cols = vars(fam))
+```
+
+facet plotting spaces
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  coord_fixed() +
+  facet_grid(rows = vars(vore), cols = vars(conservation))
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  #coord_fixed() + (CANT HAVE THIS WITH THE FREE SCALES)
+  facet_grid(rows = vars(vore), cols = vars(conservation), scales = "free_x") #scale at bottom adjusts based on what its plotting
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  #coord_fixed() + (CANT HAVE THIS WITH THE FREE SCALES)
+  facet_grid(rows = vars(vore), cols = vars(conservation), scales = "free_y")
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  #coord_fixed() + (CANT HAVE THIS WITH THE FREE SCALES)
+  facet_grid(rows = vars(vore), cols = vars(conservation), scales = "free") #both x and y
+```
+
+adjusting plotting space
+```{r}
+ggplot(msleep, aes(log10(bodywt), name)) +
+  geom_point() +
+  facet_grid(rows = vars(vore), scale = "free_y", space = "free_y") #gives room to the ones that need it
+```
+
+```{r}
+msleep <- msleep %>%
+  arrange(-bodywt) %>% #arranging low to hi wt
+  mutate(name = as_factor(name)) #redefine factor levels in order
+```
+
+
+plot is more intuitive
+```{r}
+ggplot(msleep, aes(log10(bodywt), name)) +
+  geom_point() +
+  facet_grid(rows = vars(vore), scales = "free_y", space = "free_y")
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(cols = vars(cyl))
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(cols = vars(cyl), scales = "free_x")
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(rows = vars(cyl), scales = "free_y")
+```
+
+```{r}
+mtcars
+```
+
+
+```{r}
+ggplot(mtcars, aes(hp, wt, color = fam)) +
+  geom_point() +
+  facet_grid(rows = vars(gear), scales = "free_y", space = "free_y")
+```
+
+
+facet wrap and margins
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  facet_wrap(vars(vore, conservation), scales = "free")
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  facet_wrap(vars(order)) #easier to see everything
+```
+
+margin plots
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  facet_grid(rows = vars(vore), cols = vars(conservation), scales = "free", margins = TRUE) #margin plots for rows and columns so display all points together
+```
+
+```{r}
+ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
+  geom_point(alpha = .6, shape = 16) +
+  facet_grid(rows = vars(vore), cols = vars(conservation), scales = "free", margins = "conservation") #one variable to produce margin plots
+```
+
+```{r}
+Vocab
+```
+
+```{r}
+ggplot(Vocab, aes(education, vocabulary)) +
+  stat_smooth(method = "lm", se = FALSE) +
+  facet_wrap(vars(year))
+```
+
+```{r}
+ggplot(Vocab, aes(education, vocabulary)) +
+  stat_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ year) #formula notation
+```
+
+```{r}
+ggplot(Vocab, aes(education, vocabulary)) +
+  stat_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ year, ncol = 11) #11 columns per wrap
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(rows = vars(factor(vs), factor(am)), cols = vars(gear))
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(rows = vars(factor(vs), factor(am)), cols = vars(gear), margins = TRUE) #adding all possible margins
+```
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(rows = vars(factor(vs), factor(am)), cols = vars(gear), margins = "fam")
+```
+
+```{r}
+fvs = factor(mtcars$vs)
+```
+
+
+```{r}
+ggplot(mtcars, aes(wt, hp)) +
+  geom_point() +
+  facet_grid(rows = vars(factor(vs), factor(am)), cols = vars(gear), margins = c("gear", "fvs"))
+```
+
+
+best practices: bar plots
+```{r}
+d <- ggplot(msleep, aes(vore, sleep_total))
+```
+
+dynamite plot, many perceptual problems, says some mammals dont sleep at all
+```{r}
+d +
+  stat_summary(fun = mean, geom = "bar", fill = "grey50") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = .2)
+```
+
+```{r}
+d +
+  geom_point(alpha = .6, position = posn_j) #shows individual data points
+```
+
+```{r}
+#geom_errobar()
+d +
+  geom_point(alpha = .6, position = posn_j) +
+  stat_summary(fun = mean, geom = "point", fill = "red") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = .2, color = "red")
+```
+
+```{r}
+#geom_pointrange()
+d +
+  geom_point(alpha = .6, position = posn_j) +
+  stat_summary(fun.data = mean_sdl, mult = 1, width = .2, color = "red")
+```
+
+```{r}
+d +
+  stat_summary(fun.data = mean_sdl, mult = 1, width = .2, color = "red")
+#showing summary statistics by themselves, no points plotted
+```
+
+```{r}
+ggplot(mtcars, aes(fcyl, wt)) +
+  stat_summary(fun = mean, geom = "bar", fill = "skyblue") + #bar summary, aggregating wt by mean
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = .1) #adding errorbar summary stat, aggregating wt by mean_sdl
+```
+
+
+```{r}
+ggplot(mtcars, aes(fcyl, wt, color = fam, fill = fam)) +
+  stat_summary(fun = mean, geom = "bar", alpha = .5, position = "dodge") + 
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = .1, position = "dodge")
+```
+
+```{r}
+posn_d <- position_dodge(width = .9)
+```
+
+
+```{r}
+ggplot(mtcars, aes(fcyl, wt, color = fam, fill = fam)) +
+  stat_summary(fun = mean, geom = "bar", alpha = .5, position = posn_d) + 
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = .1, position = posn_d)
+```
+
+```{r}
+#I dont have mtcarsbycyl but imagine and i will take ss
+ggplot(mtcars_by_cyl, aes(cyl, mean_wt)) +
+  geom_bar(stat = "identity", fill = "skyblue") #looks like 3 big blue rectangles
+```
+
+```{r}
+ggplot(mtcars_by_cyl, aes(cyl, mean_wt)) +
+  geom_col(fill = "skyblue") #three more identical rectangles
+```
+
+```{r}
+ggplot(mtcars_by_cyl, aes(cyl, mean_wt)) +
+  geom_col(aes(width = prop), fill = "skyblue") #setting bar widths to reflect proportion of data they contain, shows 3 different width rectangles
+```
+
+```{r}
+ggplot(mtcars_by_cyl, aes(cyl, mean_wt)) +
+  geom_col(aes(width = prop), fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_wt - sd_wt, ymax = mean_wt + sd_wt), width = .1) #adds three errorbars, 1 for each rectangle, abiding by the descriptions in the code for min and max
+```
+
+
+heat maps
+```{r}
+#basic heat map: heat maps not great
+
+ggplot(barley, aes(year, variety, fill = yield)) +     #dont have this dataset, jul 3 ss
+  geom_title() +
+  facet_wrap(vars(site), ncol = 1)
+```
+
+```{r}
+ggplot(barley, aes(yield, variety, color = year)) +
+  geom_point() +
+  facet_wrap(vars(site), ncol = 1)
+```
+
+
+dodged error bars
+```{r}
+ggplot(barley, aes(year, yield, group = site, color = site)) +
+  stat_summary(fun = mean, geom = "line", ...) +
+  stat_summary(fun.data = mean_sdl, geom = "errorbar", ...)
+```
+
+
+practice: STILL DONT HAVE BARLEY????
+```{r}
+ggplot(barley, aes(year, variety, fill = year)) +
+  geom_title()
+```
+
+```{r}
+ggplot(barley, aes(year, variety, fill = year)) +
+  geom_title() +
+  facet_wrap(facets = vars(site), ncol = 1) +
+  scale_fill_gradient(low = "white", high = "red") #ss on ipad jul 3
+```
+
+```{r}
+red_brewer_palette <- brewer.pal(9, "Reds")
+```
+
+```{r}
+install.packages("RColorBrewer")
+```
+
+```{r}
+ggplot(barley, aes(year, variety, fill = year)) +
+  geom_title() +
+  facet_wrap(facets = vars(site), ncol = 1) +
+  scale_fill_gradient(colors = red_brewer_palette) #color palette of 9 reds from brewer package
+```
+
+```{r}
+ggplot(barley, aes(year, yield, color = variety, group = variety)) +
+  geom_line() +
+  facet_wrap(~ site, nrow = 1) #ss on ipad jul 3
+```
+
+```{r}
+ggplot(barley, aes(year, yield, color = site, group = site, fill = site)) +
+  stat_summary(fun = mean, geom = "line") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "ribbon", alpha = .1, color = NA) #ss on ipad!
+```
+
+
