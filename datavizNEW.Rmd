@@ -259,7 +259,7 @@ ggplot(mtcars, aes(fcyl, fill = fam)) +
 #manual and automatic arent set up right, so below is colorless
 ```
 
-univariate
+#univariate
 ```{r}
 ggplot(mtcars, aes(mpg, 0)) + #plot 0 so that it is univariate
   geom_point(position = "jitter")
@@ -272,12 +272,12 @@ ggplot(mtcars, aes(mpg, 0)) +
 ```
 
 
-form follows function
+#form follows function
 
-GEOMETRIES:
+#GEOMETRIES:
 
-essential aesthetics: x,y 
-optional: alpha, color, fill, shape, size, stroke
+#essential aesthetics: x,y 
+#optional: alpha, color, fill, shape, size, stroke
 
 ```{r}
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
