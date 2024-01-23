@@ -200,7 +200,7 @@ ggplot(mtcars, aes(mpg, qsec, color = fcyl, shape = fam, size = hp/wt)) +
   geom_point()
 ```
 
-positions, identity is normal
+#positions, identity is normal
 
 ```{r}
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
@@ -208,7 +208,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
 ```
 
 
-Jitter - adds random noise
+#Jitter - adds random noise
 ```{r}
 ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
   geom_point(position = "jitter")
