@@ -168,7 +168,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 my_blue <- "#4ABEFF"
 ```
 
-ATTRIBUTES, theres no aes() before the color and alpha here, theyre different than aesthetics
+#ATTRIBUTES, theres no aes() before the color and alpha here, theyre different than aesthetics
 
 ```{r}
 ggplot(mtcars, aes(wt, mpg)) +
