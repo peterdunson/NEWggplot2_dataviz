@@ -1576,7 +1576,7 @@ ggplot(mtcar, aes(wt, hp)) +
   facet_grid(cols = vars(fam))
 ```
 
-facet plotting spaces
+#facet plotting spaces
 
 ```{r}
 ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
@@ -1606,7 +1606,7 @@ ggplot(msleep, aes(log10(bodywt), log10(brainwt))) +
   facet_grid(rows = vars(vore), cols = vars(conservation), scales = "free") #both x and y
 ```
 
-adjusting plotting space
+#adjusting plotting space
 ```{r}
 ggplot(msleep, aes(log10(bodywt), name)) +
   geom_point() +
@@ -1620,7 +1620,7 @@ msleep <- msleep %>%
 ```
 
 
-plot is more intuitive
+#plot is more intuitive
 ```{r}
 ggplot(msleep, aes(log10(bodywt), name)) +
   geom_point() +
