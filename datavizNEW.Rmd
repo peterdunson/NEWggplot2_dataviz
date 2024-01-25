@@ -672,7 +672,7 @@ plt_mpg_vs_wt_by_cyl + theme_iris +
 ```
 
 
-built in themes
+#built in themes
 ```{r}
 z +
   theme_classic() +
