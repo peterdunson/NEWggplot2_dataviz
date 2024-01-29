@@ -783,9 +783,9 @@ ggplot(gm2007, aes(lifeExp, country, color = lifeExp)) +
 #skipped the last bit 
 
 
-PT2
+#PT2
 
-stats
+#stats
 ```{r}
 p <- ggplot(iris, aes(x = Sepal.Width))
 ```
