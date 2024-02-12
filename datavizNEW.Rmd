@@ -433,7 +433,7 @@ ggplot(mtcars, aes(mpg, fill = fam)) +
 ```
 
 
-plotting distr
+#plotting distr
 ```{r}
 iris_summ_long <- iris %>%
   select(Species, Sepal.Width) %>%
@@ -480,7 +480,7 @@ ggplot(mtcars, aes(fcyl, fill = fam)) +
   scale_fill_brewer(palette = "Set1") #filling according to an ordinal variable
 ```
 
-LINE PLOTSSS, time series
+#LINE PLOTSSS, time series
 
 ```{r}
 str(beaver1)
@@ -507,7 +507,7 @@ ggplot(fish.tidy, aes(Year, Capture, color = Species)) + #color is best
 ```
 
 
-fill aesthetic geom_area()
+#fill aesthetic geom_area()
 ```{r}
 ggplot(fish.tidy, aes(Year, Capture, fill = Species)) + 
   geom_area()
