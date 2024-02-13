@@ -750,7 +750,7 @@ z +
 ```
 
 
-NEW STUFF
+#NEW STUFF
 ```{r}
 dplyr::glimpse(gm2007_full) #if i had it
 ```
